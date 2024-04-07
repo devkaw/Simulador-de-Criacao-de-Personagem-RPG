@@ -40,8 +40,8 @@ class SimuladorRPG:
         for personagem in self.personagens:
             print(f'''
 Nome: {personagem['Nome']}
-Raça: {personagem['Classe']}
-Classe: {personagem['Raça']}
+Raça: {personagem['Raça']}
+Classe: {personagem['Classe']}
 Equipamento: {personagem['Equipamento']}
 Dinheiro: {personagem['Dinheiro']}
 ''')
@@ -71,8 +71,8 @@ Dinheiro: {personagem['Dinheiro']}
         for personagem in self.personagens:
             print(f'''
 Nome: {personagem['Nome']}
-Raça: {personagem['Classe']}
-Classe: {personagem['Raça']}
+Raça: {personagem['Raça']}
+Classe: {personagem['Classe']}
 Equipamento: {personagem['Equipamento']}
 Dinheiro: {personagem['Dinheiro']}
 ''')
