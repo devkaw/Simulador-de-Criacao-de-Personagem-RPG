@@ -89,13 +89,15 @@ class SimuladorRPG:
     # Todo o código caso o usuário queira listar os personagens
     def listar_personagens(self):
         selecao = self.cursor.execute('SELECT * FROM personagens')
-        if selecao.fetchone() is None:
+        dados = selecao.fetchall()
+
+        if not dados:
             print('Não há personagens criados!')
             return
         
         print('Personagens Criados:')
         print('-'*50)
-        for row in selecao:
+        for row in dados:
             print("Nome:", row[0])
             print()
             print("Raça:", row[1])
@@ -113,6 +115,7 @@ class SimuladorRPG:
             print("Idiomas:", row[7])
             print()
             print('-' * 50)
+
 
     # Todo o código caso o usuário queira fechar o programa
     def fechar_conexao(self):
@@ -365,4 +368,5 @@ e caçar suas presas. Eles possuem uma ligação especial com a natureza e são 
     continuacao = input('Você quer continuar usando o programa? Digite Y para sim e N para não: ')
 
 print('Obrigado por usar meu programa!')
+fechar = input('Digite qualquer tecla para sair... ')
 simulador.fechar_conexao()
