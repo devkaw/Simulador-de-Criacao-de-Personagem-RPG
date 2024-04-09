@@ -31,7 +31,6 @@ class Personagem:
 class SimuladorRPG:
     # Método Construtor
     def __init__(self):
-        self.personagens = []
         self.conexao = sqlite3.connect('personagens.db')
         self.cursor = self.conexao.cursor()
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS personagens
@@ -42,7 +41,6 @@ class SimuladorRPG:
     def adicionar_personagem(self, nome, raça, classe, equipamento, dinheiro, proficiencias, recursos_especiais, idiomas):
         novo_personagem = Personagem(nome, raça, classe, equipamento, dinheiro, proficiencias, recursos_especiais, idiomas)
         novo_personagem = novo_personagem.criacao_dicionario()
-        self.personagens.append(novo_personagem)
         self.cursor.execute("INSERT INTO personagens VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                           (novo_personagem['Nome'], novo_personagem['Raça'], novo_personagem['Classe'], novo_personagem['Equipamento'], novo_personagem['Dinheiro'], novo_personagem['Proficiências'], novo_personagem['Recursos Especiais'], novo_personagem['Idiomas']))
         self.conexao.commit()
@@ -51,9 +49,15 @@ class SimuladorRPG:
     # Todo o código caso o usuário queira remover um personagem
     def remover_personagem(self):
         selecao = self.cursor.execute('SELECT * FROM personagens')
+        dados = selecao.fetchall()
+
+        if not dados:
+            print('Não há personagens criados!')
+            return
+        
         print('Personagens Criados:')
         print('-'*50)
-        for row in selecao:
+        for row in dados:
             print("Nome:", row[0])
             print()
             print("Raça:", row[1])
@@ -74,11 +78,10 @@ class SimuladorRPG:
         nome_remocao = input('Digite o nome do personagem que deseja remover: ')
 
         encontrado = False
-        for personagem in self.personagens:
-            if nome_remocao == personagem['Nome']:
+        for personagem in dados:
+            if nome_remocao == personagem[0]:
                 self.cursor.execute("DELETE FROM personagens WHERE nome=?", (nome_remocao,))
                 self.conexao.commit()
-                self.personagens.remove(personagem)
                 print('Personagem removido com sucesso!')
                 encontrado = True
                 break  
