@@ -2,7 +2,7 @@ import sqlite3
 # Classe representando as características necessárias de cada personagem
 class Personagem:
     # Método Construtor
-    def __init__(self, nome, raça, classe, equipamento, dinheiro, proficiencias, recursos_especiais, idiomas):
+    def __init__(self, nome, raça, classe, equipamento, dinheiro, proficiencias, recursos_especiais, idiomas, forca, destreza, constituicao, inteligencia, sabedoria, carisma):
         self.nome = nome
         self.raça = raça
         self.classe = classe
@@ -11,6 +11,12 @@ class Personagem:
         self.proficiencias = proficiencias
         self.recursos_especiais = recursos_especiais
         self.idiomas = idiomas
+        self.forca = forca
+        self.destreza = destreza
+        self.constituicao = constituicao
+        self.inteligencia = inteligencia
+        self.sabedoria = sabedoria
+        self.carisma = carisma
 
     # Criação do nosso dicionário pra colocar na lista dos personagens
     def criacao_dicionario(self):
@@ -22,7 +28,13 @@ class Personagem:
             'Dinheiro': self.dinheiro,
             'Proficiências': self.proficiencias,
             'Recursos Especiais': self.recursos_especiais,
-            'Idiomas': self.idiomas
+            'Idiomas': self.idiomas,
+            'Força': self.forca,
+            'Destreza': self.destreza,
+            'Constituição': self.constituicao,
+            'Inteligência': self.inteligencia,
+            'Sabedoria': self.sabedoria,
+            'Carisma': self.carisma
         }
         return dicionario
 
@@ -34,15 +46,15 @@ class SimuladorRPG:
         self.conexao = sqlite3.connect('personagens.db')
         self.cursor = self.conexao.cursor()
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS personagens
-                            (nome TEXT, raca TEXT, classe TEXT, equipamento TEXT, dinheiro TEXT, proficiencias TEXT, recursos_especiais TEXT, idiomas TEXT)''')
+                            (nome TEXT, raca TEXT, classe TEXT, equipamento TEXT, dinheiro TEXT, proficiencias TEXT, recursos_especiais TEXT, idiomas TEXT, forca TEXT, destreza TEXT, constituicao TEXT, inteligencia TEXT, sabedoria TEXT, carisma TEXT)''')
 
 
     # Todo o código caso o usuário queira adicionar um personagem
-    def adicionar_personagem(self, nome, raça, classe, equipamento, dinheiro, proficiencias, recursos_especiais, idiomas):
-        novo_personagem = Personagem(nome, raça, classe, equipamento, dinheiro, proficiencias, recursos_especiais, idiomas)
+    def adicionar_personagem(self, nome, raça, classe, equipamento, dinheiro, proficiencias, recursos_especiais, idiomas, forca, destreza, constituicao, inteligencia, sabedoria, carisma):
+        novo_personagem = Personagem(nome, raça, classe, equipamento, dinheiro, proficiencias, recursos_especiais, idiomas, forca, destreza, constituicao, inteligencia, sabedoria, carisma)
         novo_personagem = novo_personagem.criacao_dicionario()
-        self.cursor.execute("INSERT INTO personagens VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                          (novo_personagem['Nome'], novo_personagem['Raça'], novo_personagem['Classe'], novo_personagem['Equipamento'], novo_personagem['Dinheiro'], novo_personagem['Proficiências'], novo_personagem['Recursos Especiais'], novo_personagem['Idiomas']))
+        self.cursor.execute("INSERT INTO personagens VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                          (novo_personagem['Nome'], novo_personagem['Raça'], novo_personagem['Classe'], novo_personagem['Equipamento'], novo_personagem['Dinheiro'], novo_personagem['Proficiências'], novo_personagem['Recursos Especiais'], novo_personagem['Idiomas'], novo_personagem['Força'], novo_personagem['Destreza'], novo_personagem['Constituição'], novo_personagem['Inteligência'], novo_personagem['Sabedoria'], novo_personagem['Carisma']))
         self.conexao.commit()
         print(f'Personagem {nome} criado com sucesso!')
 
@@ -73,7 +85,13 @@ class SimuladorRPG:
             print("Recursos Especiais:", row[6])
             print()
             print("Idiomas:", row[7])
-            print()
+            print(f"""Bônus de Atributo:
+Bônus de Força: +{row[8]} 
+Bônus de Destreza: +{row[9]} 
+Bônus de Constituição: +{row[10]} 
+Bônus de Inteligência: +{row[11]}
+Bônus de Sabedoria: +{row[12]} 
+Bônus de Carisma: +{row[13]}""")
             print('-' * 50)
         nome_remocao = input('Digite o nome do personagem que deseja remover: ')
 
@@ -117,6 +135,13 @@ class SimuladorRPG:
             print()
             print("Idiomas:", row[7])
             print()
+            print(f"""Bônus de Atributo:
+Bônus de Força: +{row[8]} 
+Bônus de Destreza: +{row[9]} 
+Bônus de Constituição: +{row[10]} 
+Bônus de Inteligência: +{row[11]}
+Bônus de Sabedoria: +{row[12]} 
+Bônus de Carisma: +{row[13]}""")
             print('-' * 50)
 
 
@@ -174,38 +199,110 @@ de uma afinidade natural com a magia e uma habilidade especial para criar dispos
         escolha_raça = int(input('Digite a opção escolhida: '))
         if escolha_raça == 1:
             raça = 'Humano'
+            dicionario_de_bonus = {
+                'Força': 1,
+                'Destreza': 1,
+                'Constituição': 1,
+                'Inteligência': 1,
+                'Sabedoria': 1,
+                'Carisma': 1
+            }
             idiomas = 'Comum e um idioma adicional de sua escolha'
 
         elif escolha_raça == 2:
             raça = 'Elfo'
+            dicionario_de_bonus = {
+                'Força': 0,
+                'Destreza': 2,
+                'Constituição': 0,
+                'Inteligência': 0,
+                'Sabedoria': 1,
+                'Carisma': 0
+            }
             idiomas = 'Comum e Élfico'
         
         elif escolha_raça == 3:
             raça = 'Anão'
+            dicionario_de_bonus = {
+                'Força': 2,
+                'Destreza': 0,
+                'Constituição': 2,
+                'Inteligência': 0,
+                'Sabedoria': 0,
+                'Carisma': 0
+            }
             idiomas = 'Comum e Anão'
 
         elif escolha_raça == 4:
             raça = 'Halfling'
+            dicionario_de_bonus = {
+                'Força': 0,
+                'Destreza': 2,
+                'Constituição': 0,
+                'Inteligência': 0,
+                'Sabedoria': 0,
+                'Carisma': 0
+            }
             idiomas = 'Comum e Halfling'
 
         elif escolha_raça == 5:
             raça = 'Meio-elfo'
+            dicionario_de_bonus = {
+                'Força': 0,
+                'Destreza': 1,
+                'Constituição': 0,
+                'Inteligência': 1,
+                'Sabedoria': 0,
+                'Carisma': 2
+            }
             idiomas = 'Comum, Élfico e um idioma adicional de sua escolha'
 
         elif escolha_raça == 6:
             raça = 'Meio-orc'
+            dicionario_de_bonus = {
+                'Força': 2,
+                'Destreza': 0,
+                'Constituição': 1,
+                'Inteligência': 0,
+                'Sabedoria': 0,
+                'Carisma': 0
+            }
             idiomas = 'Comum e Orc'
 
         elif escolha_raça == 7:
             raça = 'Tiefling'
+            dicionario_de_bonus = {
+                'Força': 0,
+                'Destreza': 0,
+                'Constituição': 0,
+                'Inteligência': 1,
+                'Sabedoria': 0,
+                'Carisma': 2
+            }
             idiomas = 'Comum e Infernal'
 
         elif escolha_raça == 8:
             raça = 'Draconato'
+            dicionario_de_bonus = {
+                'Força': 2,
+                'Destreza': 0,
+                'Constituição': 0,
+                'Inteligência': 0,
+                'Sabedoria': 0,
+                'Carisma': 1
+            }
             idiomas = 'Comum e Dracônico'
 
         elif escolha_raça == 9:
             raça = 'Gnomo'
+            dicionario_de_bonus = {
+                'Força': 0,
+                'Destreza': 0,
+                'Constituição': 0,
+                'Inteligência': 2,
+                'Sabedoria': 0,
+                'Carisma': 0
+            }
             idiomas = 'Comum, Gnômico e um idioma adicional de sua escolha'
 
         if 'um idioma adicional de sua escolha' in idiomas:
@@ -286,6 +383,8 @@ e caçar suas presas. Eles possuem uma ligação especial com a natureza e são 
 ''')
         escolha_classe = int(input('Digite a opção escolhida: '))
         if escolha_classe == 1:
+            dicionario_de_bonus['Força'] += 2
+            dicionario_de_bonus['Constituição'] += 2
             classe = 'Guerreiro'
             equipamento = 'Armadura de cota de malha, armadura de couro ou corselete, escudo, uma arma corpo a corpo simples, um arco curto e um aljavade flechas ou uma arma corpo a corpo simples e uma arma à distância simples, pacote de aventureiro'
             dinheiro = '5d4 x 10 peças de ouro (ou seja, de 50 a 200 peças de ouro)'
@@ -293,6 +392,8 @@ e caçar suas presas. Eles possuem uma ligação especial com a natureza e são 
             recursos_especiais = 'Ações de Combate - Capacidade de realizar múltiplas ações de combate, bem como outros talentos específicos de guerreiro'
 
         elif escolha_classe == 2:
+            dicionario_de_bonus['Inteligência'] += 2
+            dicionario_de_bonus['Destreza'] += 1
             classe = 'Mago'
             equipamento = 'Um bordão arcano ou varinha, um livro de magias, componentes arcanos, pacote de estudioso ou pacote de aventureiro'
             dinheiro = '3d4 x 10 peças de ouro (ou seja, de 30 a 120 peças de ouro)'
@@ -300,6 +401,8 @@ e caçar suas presas. Eles possuem uma ligação especial com a natureza e são 
             recursos_especiais = 'Livro de Magias - Capacidade de aprender e lançar uma variedade de magias arcanas de diferentes escolas e níveis de poder'
 
         elif escolha_classe == 3:
+            dicionario_de_bonus['Sabedoria'] += 2
+            dicionario_de_bonus['Carisma'] += 1
             classe = 'Clérigo'
             equipamento = 'Armadura de malha, escudo, uma arma corpo a corpo simples, um símbolo sagrado, pacote de sacerdote ou pacote de explorador'
             dinheiro = '5d4 x 10 peças de ouro (ou seja, de 50 a 200 peças de ouro)'
@@ -307,6 +410,8 @@ e caçar suas presas. Eles possuem uma ligação especial com a natureza e são 
             recursos_especiais = 'Magias - Capacidade de lançar magias divinas, bem como canalizar energia divina para curar ferimentos e afastar o mal'
 
         elif escolha_classe == 4:
+            dicionario_de_bonus['Força'] += 2
+            dicionario_de_bonus['Constituição'] += 2
             classe = 'Bárbaro'
             equipamento = 'Arma corpo a corpo, duas armas corpo a corpo leves, pacote de explorador ou pacote de aventureiro, quatro machados de arremesso'
             dinheiro = '2d4 x 10 peças de ouro (ou seja, de 20 a 80 peças de ouro)'
@@ -314,6 +419,8 @@ e caçar suas presas. Eles possuem uma ligação especial com a natureza e são 
             recursos_especiais = 'Fúria - Capacidade de entrar em um estado de fúria durante o combate, concedendo vantagem em testes de Força, resistência a dano e outros benefícios'
 
         elif escolha_classe == 5:
+            dicionario_de_bonus['Sabedoria'] += 2
+            dicionario_de_bonus['Inteligência'] += 1
             classe = 'Druida'
             equipamento = 'Armadura de couro, um escudo, um foco druídico, uma arma corpo a corpo simples, pacote de explorador ou pacote de aventureiro'
             dinheiro = '2d4 x 10 peças de ouro (ou seja, de 20 a 80 peças de ouro)'
@@ -321,6 +428,8 @@ e caçar suas presas. Eles possuem uma ligação especial com a natureza e são 
             recursos_especiais = 'Transformação - Capacidade de se transformar em animais e acessar os poderes da natureza'
 
         elif escolha_classe == 6:
+            dicionario_de_bonus['Destreza'] += 2
+            dicionario_de_bonus['Inteligência'] += 1
             classe = 'Ladino'
             equipamento = 'Uma arma corpo a corpo simples, duas armas à distância simples, ferramentas de ladrão, pacote de ladrão'
             dinheiro = '4d4 x 10 peças de ouro (ou seja, de 40 a 160 peças de ouro)'
@@ -328,6 +437,8 @@ e caçar suas presas. Eles possuem uma ligação especial com a natureza e são 
             recursos_especiais = 'Furtividade - Capacidade de se mover furtivamente e realizar ações de combate furtivas, bem como desarmar armadilhas e abrir fechaduras'
 
         elif escolha_classe == 7:
+            dicionario_de_bonus['Destreza'] += 2
+            dicionario_de_bonus['Carisma'] += 2
             classe = 'Bardo'
             equipamento = 'Uma arma corpo a corpo simples, uma arma à distância simples, um instrumento musical (à escolha), pacote de diplomata ou pacote de entretenimento'
             dinheiro = '3d4 x 10 peças de ouro (ou seja, de 30 a 120 peças de ouro)'
@@ -335,6 +446,8 @@ e caçar suas presas. Eles possuem uma ligação especial com a natureza e são 
             recursos_especiais = 'Magias - Capacidade de lançar magias, bem como inspirar aliados e desencorajar inimigos com seu talento musical'
 
         elif escolha_classe == 8:
+            dicionario_de_bonus['Destreza'] += 2
+            dicionario_de_bonus['Sabedoria'] += 1
             classe = 'Monge'
             equipamento = 'Arma corpo a corpo simples, pacote de explorador ou pacote de aventureiro'
             dinheiro = '5d4 po (ou seja, de 5 a 20 peças de ouro)'
@@ -342,6 +455,8 @@ e caçar suas presas. Eles possuem uma ligação especial com a natureza e são 
             recursos_especiais = 'Ki - Capacidade de canalizar sua energia interior para realizar feitos sobre-humanos, como ataques desarmados poderosos e habilidades especiais como esquiva sobrenatural e toque tranquilo para resistir a efeitos mágicos'
 
         elif escolha_classe == 9:
+            dicionario_de_bonus['Força'] += 2
+            dicionario_de_bonus['Carisma'] += 1
             classe = 'Paladino'
             equipamento = 'Armadura de corselete ou escamas, escudo, uma arma corpo a corpo simples, cinco javelins ou qualquer arma corpo a corpo simples, pacote de sacerdote ou pacote de aventureiro'
             dinheiro = '5d4 x 10 peças de ouro (ou seja, de 50 a 200 peças de ouro)'
@@ -349,13 +464,15 @@ e caçar suas presas. Eles possuem uma ligação especial com a natureza e são 
             recursos_especiais = 'Juramento Sagrado - Capacidade de fazer um juramento sagrado a uma causa ou divindade, concedendo poderes divinos e magias relacionadas ao juramento'
 
         elif escolha_classe == 10:
+            dicionario_de_bonus['Destreza'] += 2
+            dicionario_de_bonus['Sabedoria'] += 1
             classe = 'Patrulheiro'
             equipamento = 'Armadura de couro, duas armas corpo a corpo simples, duas armas à distância simples, um pacote de explorador e um símbolo da vida selvagem'
             dinheiro = '5d4 x 10 peças de ouro (ou seja, de 50 a 200 peças de ouro)'
             proficiencias = 'Armaduras leves e médias (sem metal), escudos (não de metal), armas simples, armas marciais'
             recursos_especiais = 'Caçador - Capacidade de rastrear presas, sobreviver na natureza selvagem e lançar magias de proteção e combate'
 
-        simulador.adicionar_personagem(nome, raça, classe, equipamento, dinheiro, proficiencias, recursos_especiais, idiomas)
+        simulador.adicionar_personagem(nome, raça, classe, equipamento, dinheiro, proficiencias, recursos_especiais, idiomas, dicionario_de_bonus['Força'], dicionario_de_bonus['Destreza'], dicionario_de_bonus['Constituição'], dicionario_de_bonus['Inteligência'], dicionario_de_bonus['Sabedoria'], dicionario_de_bonus['Carisma'])
         print('='*50)
 
     # Todo o código caso o usuário escolha a segunda opção
