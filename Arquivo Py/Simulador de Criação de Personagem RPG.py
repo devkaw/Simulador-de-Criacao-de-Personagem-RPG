@@ -2,7 +2,7 @@ import sqlite3
 # Classe representando as características necessárias de cada personagem
 class Personagem:
     # Método Construtor
-    def __init__(self, nome, raça, classe, equipamento, dinheiro, proficiencias, recursos_especiais, idiomas, forca, destreza, constituicao, inteligencia, sabedoria, carisma):
+    def __init__(self, nome, raça, classe, equipamento, dinheiro, proficiencias, recursos_especiais, idiomas, forca, destreza, constituicao, inteligencia, sabedoria, carisma, antecedente):
         self.nome = nome
         self.raça = raça
         self.classe = classe
@@ -17,6 +17,7 @@ class Personagem:
         self.inteligencia = inteligencia
         self.sabedoria = sabedoria
         self.carisma = carisma
+        self.antecedente = antecedente
 
     # Criação do nosso dicionário pra colocar na lista dos personagens
     def criacao_dicionario(self):
@@ -34,7 +35,8 @@ class Personagem:
             'Constituição': self.constituicao,
             'Inteligência': self.inteligencia,
             'Sabedoria': self.sabedoria,
-            'Carisma': self.carisma
+            'Carisma': self.carisma,
+            'Antecedente': self.antecedente
         }
         return dicionario
 
@@ -46,15 +48,15 @@ class SimuladorRPG:
         self.conexao = sqlite3.connect('personagens.db')
         self.cursor = self.conexao.cursor()
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS personagens
-                            (nome TEXT, raca TEXT, classe TEXT, equipamento TEXT, dinheiro TEXT, proficiencias TEXT, recursos_especiais TEXT, idiomas TEXT, forca TEXT, destreza TEXT, constituicao TEXT, inteligencia TEXT, sabedoria TEXT, carisma TEXT)''')
+                            (nome TEXT, raca TEXT, classe TEXT, equipamento TEXT, dinheiro TEXT, proficiencias TEXT, recursos_especiais TEXT, idiomas TEXT, forca TEXT, destreza TEXT, constituicao TEXT, inteligencia TEXT, sabedoria TEXT, carisma TEXT, antedente TEXT)''')
 
 
     # Todo o código caso o usuário queira adicionar um personagem
-    def adicionar_personagem(self, nome, raça, classe, equipamento, dinheiro, proficiencias, recursos_especiais, idiomas, forca, destreza, constituicao, inteligencia, sabedoria, carisma):
-        novo_personagem = Personagem(nome, raça, classe, equipamento, dinheiro, proficiencias, recursos_especiais, idiomas, forca, destreza, constituicao, inteligencia, sabedoria, carisma)
+    def adicionar_personagem(self, nome, raça, classe, equipamento, dinheiro, proficiencias, recursos_especiais, idiomas, forca, destreza, constituicao, inteligencia, sabedoria, carisma, antecedente):
+        novo_personagem = Personagem(nome, raça, classe, equipamento, dinheiro, proficiencias, recursos_especiais, idiomas, forca, destreza, constituicao, inteligencia, sabedoria, carisma, antecedente)
         novo_personagem = novo_personagem.criacao_dicionario()
-        self.cursor.execute("INSERT INTO personagens VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                          (novo_personagem['Nome'], novo_personagem['Raça'], novo_personagem['Classe'], novo_personagem['Equipamento'], novo_personagem['Dinheiro'], novo_personagem['Proficiências'], novo_personagem['Recursos Especiais'], novo_personagem['Idiomas'], novo_personagem['Força'], novo_personagem['Destreza'], novo_personagem['Constituição'], novo_personagem['Inteligência'], novo_personagem['Sabedoria'], novo_personagem['Carisma']))
+        self.cursor.execute("INSERT INTO personagens VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                          (novo_personagem['Nome'], novo_personagem['Raça'], novo_personagem['Classe'], novo_personagem['Equipamento'], novo_personagem['Dinheiro'], novo_personagem['Proficiências'], novo_personagem['Recursos Especiais'], novo_personagem['Idiomas'], novo_personagem['Força'], novo_personagem['Destreza'], novo_personagem['Constituição'], novo_personagem['Inteligência'], novo_personagem['Sabedoria'], novo_personagem['Carisma'], novo_personagem['Antecedente']))
         self.conexao.commit()
         print(f'Personagem {nome} criado com sucesso!')
 
@@ -92,6 +94,8 @@ Bônus de Constituição: +{row[10]}
 Bônus de Inteligência: +{row[11]}
 Bônus de Sabedoria: +{row[12]} 
 Bônus de Carisma: +{row[13]}""")
+            print()
+            print("Antecedente:", row[14])
             print('-' * 50)
         nome_remocao = input('Digite o nome do personagem que deseja remover: ')
 
@@ -142,6 +146,8 @@ Bônus de Constituição: +{row[10]}
 Bônus de Inteligência: +{row[11]}
 Bônus de Sabedoria: +{row[12]} 
 Bônus de Carisma: +{row[13]}""")
+            print()
+            print("Antecedente:", row[14])
             print('-' * 50)
 
 
@@ -207,7 +213,7 @@ de uma afinidade natural com a magia e uma habilidade especial para criar dispos
                 'Sabedoria': 1,
                 'Carisma': 1
             }
-            idiomas = 'Comum e um idioma adicional de sua escolha'
+            idiomas = 'Comum, idioma adicional de sua escolha'
 
         elif escolha_raça == 2:
             raça = 'Elfo'
@@ -219,7 +225,7 @@ de uma afinidade natural com a magia e uma habilidade especial para criar dispos
                 'Sabedoria': 1,
                 'Carisma': 0
             }
-            idiomas = 'Comum e Élfico'
+            idiomas = 'Comum, Élfico'
         
         elif escolha_raça == 3:
             raça = 'Anão'
@@ -231,7 +237,7 @@ de uma afinidade natural com a magia e uma habilidade especial para criar dispos
                 'Sabedoria': 0,
                 'Carisma': 0
             }
-            idiomas = 'Comum e Anão'
+            idiomas = 'Comum, Anão'
 
         elif escolha_raça == 4:
             raça = 'Halfling'
@@ -243,7 +249,7 @@ de uma afinidade natural com a magia e uma habilidade especial para criar dispos
                 'Sabedoria': 0,
                 'Carisma': 0
             }
-            idiomas = 'Comum e Halfling'
+            idiomas = 'Comum, Halfling'
 
         elif escolha_raça == 5:
             raça = 'Meio-elfo'
@@ -255,7 +261,7 @@ de uma afinidade natural com a magia e uma habilidade especial para criar dispos
                 'Sabedoria': 0,
                 'Carisma': 2
             }
-            idiomas = 'Comum, Élfico e um idioma adicional de sua escolha'
+            idiomas = 'Comum, Élfico, idioma adicional de sua escolha'
 
         elif escolha_raça == 6:
             raça = 'Meio-orc'
@@ -267,7 +273,7 @@ de uma afinidade natural com a magia e uma habilidade especial para criar dispos
                 'Sabedoria': 0,
                 'Carisma': 0
             }
-            idiomas = 'Comum e Orc'
+            idiomas = 'Comum, Orc'
 
         elif escolha_raça == 7:
             raça = 'Tiefling'
@@ -279,7 +285,7 @@ de uma afinidade natural com a magia e uma habilidade especial para criar dispos
                 'Sabedoria': 0,
                 'Carisma': 2
             }
-            idiomas = 'Comum e Infernal'
+            idiomas = 'Comum, Infernal'
 
         elif escolha_raça == 8:
             raça = 'Draconato'
@@ -291,7 +297,7 @@ de uma afinidade natural com a magia e uma habilidade especial para criar dispos
                 'Sabedoria': 0,
                 'Carisma': 1
             }
-            idiomas = 'Comum e Dracônico'
+            idiomas = 'Comum, Dracônico'
 
         elif escolha_raça == 9:
             raça = 'Gnomo'
@@ -303,8 +309,8 @@ de uma afinidade natural com a magia e uma habilidade especial para criar dispos
                 'Sabedoria': 0,
                 'Carisma': 0
             }
-            idiomas = 'Comum, Gnômico e um idioma adicional de sua escolha'
-
+            idiomas = 'Comum, Gnômico, idioma adicional de sua escolha'
+        print('-'*50)
         if 'um idioma adicional de sua escolha' in idiomas:
             print('''
 Lista de Idiomas!
@@ -472,7 +478,138 @@ e caçar suas presas. Eles possuem uma ligação especial com a natureza e são 
             proficiencias = 'Armaduras leves e médias (sem metal), escudos (não de metal), armas simples, armas marciais'
             recursos_especiais = 'Caçador - Capacidade de rastrear presas, sobreviver na natureza selvagem e lançar magias de proteção e combate'
 
-        simulador.adicionar_personagem(nome, raça, classe, equipamento, dinheiro, proficiencias, recursos_especiais, idiomas, dicionario_de_bonus['Força'], dicionario_de_bonus['Destreza'], dicionario_de_bonus['Constituição'], dicionario_de_bonus['Inteligência'], dicionario_de_bonus['Sabedoria'], dicionario_de_bonus['Carisma'])
+        print('-'*50)
+        print('-'*50)
+        print('''
+Esxolha seu antecedente!
+    
+1) Acólito: Um acólito é uma pessoa que dedicou sua vida ao serviço de uma divindade, seja como clérigo, monge, ou de outra forma religiosa. 
+Eles possuem conhecimento profundo sobre sua fé e são capazes de influenciar os outros com suas palavras e convicções.
+              
+2) Artífice de Guilda: Um artífice de guilda é um membro respeitado de uma guilda de artesãos, seja como ferreiro, carpinteiro, 
+ou qualquer outra profissão. Eles são habilidosos em seu ofício e têm boas relações dentro da comunidade de artesãos.
+              
+3) Charlatão: Um charlatão é um trapaceiro e manipulador, habilidoso em enganar os outros para seu próprio benefício. 
+Eles são mestres em disfarce e podem facilmente se passar por outra pessoa ou inventar histórias convincentes para alcançar seus objetivos.
+              
+4) Criminoso: Um criminoso é alguém que vive à margem da lei, envolvido em atividades ilegais como roubo, contrabando, ou extorsão. 
+Eles são hábeis em se esconder nas sombras e enganar as autoridades.
+              
+5) Erudito: Um erudito é alguém que passou anos estudando em bibliotecas e academias, adquirindo conhecimento sobre uma variedade de assuntos. 
+Eles são especialistas em suas áreas de estudo e têm uma vasta compreensão do mundo ao seu redor.
+
+6) Fazendeiro: Um fazendeiro é alguém que trabalha na terra, cultivando colheitas e criando animais para sustento próprio ou para o comércio. 
+Eles são familiarizados com a vida no campo e têm habilidades práticas de sobrevivência.
+              
+7) Herói Popular: Um herói popular é alguém que ganhou fama e reconhecimento dentro de uma comunidade específica, seja por atos de heroísmo, 
+talento artístico, ou qualquer outra realização notável. Eles têm uma rede de contatos e aliados dentro dessa comunidade e são capazes de 
+influenciar os outros com sua reputação.
+              
+8) Nobre: Um nobre é alguém nascido em uma família de alta classe, com riqueza, poder e influência. Eles são bem-educados e têm uma compreensão 
+profunda da história e da política de seu mundo. Eles estão acostumados a receber respeito e obediência dos outros e têm acesso a recursos significativos.
+
+9) Órfão: Um órfão é alguém que cresceu sem pais ou família, sobrevivendo nas ruas ou em instituições de caridade. Eles aprenderam a se virar por conta 
+própria desde cedo e desenvolveram habilidades de sobrevivência e furtividade para enfrentar os desafios da vida nas ruas.
+              
+10) Plebeu: Um plebeu é alguém de origem humilde, trabalhando como artesão, comerciante, ou em outra profissão comum. Eles são habilidosos em seu ofício 
+e têm uma compreensão prática do mundo ao seu redor. Apesar de não terem status ou privilégios, são respeitados por suas habilidades e trabalho árduo.
+''')
+        escolha_antecedente = int(input('Digite a opção escolhida: '))
+        if escolha_antecedente == 1:
+            antecedente = 'Acólito'
+            proficiencias += ', Conhecimento de Religião, Persuasão.'
+            idiomas += ', um idioma à sua escolha.'
+
+        elif escolha_antecedente == 2:
+            antecedente = 'Artífice de Guilda'
+            proficiencias += ', Ferramentas de Artesão, Persuasão.'
+            idiomas += ', um idioma à sua escolha.'
+
+        elif escolha_antecedente == 3:
+            antecedente = 'Charlatão'
+            proficiencias += ', Fraude e Falsificação, Enganação.'
+            idiomas += ', um idioma à sua escolha.'
+
+        elif escolha_antecedente == 4:
+            antecedente = 'Criminoso'
+            proficiencias += ', Furtividade, Enganação.'
+            idiomas += ', um idioma à sua escolha.'
+
+        elif escolha_antecedente == 5:
+            antecedente = 'Erudito'
+            proficiencias += ', História, Intuição.'
+            idiomas += ', um idioma à sua escolha.'
+
+        elif escolha_antecedente == 6:
+            antecedente = 'Fazendeiro'
+            proficiencias += ', Agricultura e Animais, Sobrevivência.'
+            idiomas += ', um idioma à sua escolha.'
+
+        elif escolha_antecedente == 7:
+            antecedente = 'Herói Popular'
+            proficiencias += ', Falar e Influenciar, Persuasão.'
+            idiomas += ', um idioma à sua escolha.'
+
+        elif escolha_antecedente == 8:
+            antecedente = 'Nobre'
+            proficiencias += ', História, Persuasão.'
+            idiomas += ', um idioma à sua escolha.'
+
+        elif escolha_antecedente == 9:
+            antecedente = 'Órfão'
+            proficiencias += ', Furtividade, Sobrevivência.'
+            idiomas += ', um idioma à sua escolha.'
+
+        elif escolha_antecedente == 10:
+            antecedente = 'Plebeu'
+            proficiencias += ', Ferramentas de Artesão, Persuasão.'
+            idiomas += ', um idioma à sua escolha.'
+
+        print('-'*50)
+        if 'um idioma à sua escolha' in idiomas:
+            print('''
+Lista de Idiomas!
+                  
+1) Anão: O idioma falado por anões.
+                  
+2) Élfico: O idioma dos elfos.
+                  
+3) Halfling: O idioma dos halflings (também conhecido como linguagem dos pequenos).
+                  
+4) Infernal: O idioma das criaturas infernais e dos tieflings.
+                  
+5) Dracônico: O idioma dos dragões e de algumas criaturas draconianas.
+                  
+6) Gnômico: O idioma dos gnomos.
+                  
+7) Orc: O idioma dos orcs e de algumas outras criaturas brutais.
+''')
+            print('-'*50)
+            print(f'O seus idiomas por enquanto são: {idiomas}')
+            idioma_adicional = int(input('Você precisa escolher um idioma adicional, digite o número correspondente a ele aqui: '))
+            if idioma_adicional == 1:
+                idiomas = idiomas.replace('um idioma à sua escolha', 'Anão')
+
+            elif idioma_adicional == 2:
+                idiomas = idiomas.replace('um idioma à sua escolha', 'Élfico')
+
+            elif idioma_adicional == 3:
+                idiomas = idiomas.replace('um idioma à sua escolha', 'Halfling')
+
+            elif idioma_adicional == 4:
+                idiomas = idiomas.replace('um idioma à sua escolha', 'Infernal')
+
+            elif idioma_adicional == 5:
+                idiomas = idiomas.replace('um idioma à sua escolha', 'Dracônico')
+
+            elif idioma_adicional == 6:
+                idiomas = idiomas.replace('um idioma à sua escolha', 'Gnômico')
+
+            elif idioma_adicional == 7:
+                idiomas = idiomas.replace('um idioma à sua escolha', 'Orc')
+        print('-'*50)
+
+        simulador.adicionar_personagem(nome, raça, classe, equipamento, dinheiro, proficiencias, recursos_especiais, idiomas, dicionario_de_bonus['Força'], dicionario_de_bonus['Destreza'], dicionario_de_bonus['Constituição'], dicionario_de_bonus['Inteligência'], dicionario_de_bonus['Sabedoria'], dicionario_de_bonus['Carisma'], antecedente)
         print('='*50)
 
     # Todo o código caso o usuário escolha a segunda opção
