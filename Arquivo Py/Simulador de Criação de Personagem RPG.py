@@ -140,12 +140,12 @@ Bônus de Carisma: +{row[13]}""")
             print("Idiomas:", row[7])
             print()
             print(f"""Bônus de Atributo:
-Bônus de Força: +{row[8]} 
-Bônus de Destreza: +{row[9]} 
-Bônus de Constituição: +{row[10]} 
-Bônus de Inteligência: +{row[11]}
-Bônus de Sabedoria: +{row[12]} 
-Bônus de Carisma: +{row[13]}""")
+  Bônus de Força: +{row[8]} 
+  Bônus de Destreza: +{row[9]} 
+  Bônus de Constituição: +{row[10]} 
+  Bônus de Inteligência: +{row[11]}
+  Bônus de Sabedoria: +{row[12]} 
+  Bônus de Carisma: +{row[13]}""")
             print()
             print("Antecedente:", row[14])
             print('-' * 50)
@@ -213,7 +213,7 @@ de uma afinidade natural com a magia e uma habilidade especial para criar dispos
                 'Sabedoria': 1,
                 'Carisma': 1
             }
-            idiomas = 'Comum, idioma adicional de sua escolha'
+            idiomas = 'Comum, um idioma adicional de sua escolha'
 
         elif escolha_raça == 2:
             raça = 'Elfo'
@@ -261,7 +261,7 @@ de uma afinidade natural com a magia e uma habilidade especial para criar dispos
                 'Sabedoria': 0,
                 'Carisma': 2
             }
-            idiomas = 'Comum, Élfico, idioma adicional de sua escolha'
+            idiomas = 'Comum, Élfico, um idioma adicional de sua escolha'
 
         elif escolha_raça == 6:
             raça = 'Meio-orc'
@@ -309,7 +309,7 @@ de uma afinidade natural com a magia e uma habilidade especial para criar dispos
                 'Sabedoria': 0,
                 'Carisma': 0
             }
-            idiomas = 'Comum, Gnômico, idioma adicional de sua escolha'
+            idiomas = 'Comum, Gnômico, um idioma adicional de sua escolha'
         print('-'*50)
         if 'um idioma adicional de sua escolha' in idiomas:
             print('''
