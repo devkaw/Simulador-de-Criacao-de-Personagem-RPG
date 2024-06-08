@@ -2,8 +2,8 @@ from sisteminha import *
 # Todo o código para a criação do menu
 simulador = SimuladorRPG()
 print('Bem vindo ao Simulador de Criação de Personagem RPG! Aqui vai o menu de opções para você:')
-continuacao = 'y'
-while continuacao.lower() == 'y':
+while True:
+    print('-'*50)
     print('''
 1) Adicionar um personagem
 2) Remover um personagem
@@ -496,8 +496,8 @@ Lista de Idiomas!
     # Todo o código caso o usuário escolha a segunda opção
     elif escolha == 2:
         simulador.remover_personagem()
-        input('Digite qualquer tecla para continuar...')
         print('-'*50)
+        mimindo(5)
         os.system('cls' if os.name == 'nt' else 'clear')
 
     # Todo o código caso o usuário escolha a terceira opção
@@ -518,11 +518,12 @@ Lista de Idiomas!
         print('Seu programa e conexão foram fechados!')
         mimindo(5)
         os.system('cls' if os.name == 'nt' else 'clear')
+        break
 
     elif escolha == 6:
         num_de_xp = int(input('Digite quanto de XP você deseja adicionar a um personagem: '))
         os.system('cls' if os.name == 'nt' else 'clear')
-        simulador.ganhar_xp()
+        simulador.ganhar_xp(num_de_xp)
         mimindo(5)
         os.system('cls' if os.name == 'nt' else 'clear')
 

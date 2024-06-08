@@ -68,7 +68,7 @@ class SimuladorRPG:
         novo_personagem = Personagem(nome, raça, classe, equipamento, dinheiro, proficiencias, recursos_especiais, idiomas, forca, destreza, constituicao, inteligencia, sabedoria, carisma, antecedente, itens_do_pacote, vida, 1, 0)
         novo_personagem = novo_personagem.criacao_dicionario()
         self.cursor.execute("INSERT INTO personagens VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                          (novo_personagem['Nome'], novo_personagem['Raça'], novo_personagem['Classe'], novo_personagem['Equipamento'], novo_personagem['Dinheiro'], novo_personagem['Proficiências'], novo_personagem['Recursos Especiais'], novo_personagem['Idiomas'], novo_personagem['Força'], novo_personagem['Destreza'], novo_personagem['Constituição'], novo_personagem['Inteligência'], novo_personagem['Sabedoria'], novo_personagem['Carisma'], novo_personagem['Antecedente'], novo_personagem['Itens do pacote que você possui'], novo_personagem['Vida']), novo_personagem['Nível'], novo_personagem['XP'])
+                          (novo_personagem['Nome'], novo_personagem['Raça'], novo_personagem['Classe'], novo_personagem['Equipamento'], novo_personagem['Dinheiro'], novo_personagem['Proficiências'], novo_personagem['Recursos Especiais'], novo_personagem['Idiomas'], novo_personagem['Força'], novo_personagem['Destreza'], novo_personagem['Constituição'], novo_personagem['Inteligência'], novo_personagem['Sabedoria'], novo_personagem['Carisma'], novo_personagem['Antecedente'], novo_personagem['Itens do pacote que você possui'], novo_personagem['Vida'], novo_personagem['Nível'], novo_personagem['XP']))
         self.conexao.commit()
         print(f'Personagem {nome} criado com sucesso!')
 
@@ -180,6 +180,8 @@ Bônus de Carisma: +{row[13]}""")
             print()
             print('-' * 50)
 
+        input('Digite qualquer tecla para continuar... ')
+
     # Todo o código caso o usuário escolha girar um dado
     def girar_dado(self):
         print('''
@@ -190,7 +192,7 @@ Escolha o dado que você deseja girar:
 3) Dado de 10 lados
 4) Dado de 8 lados
 5) Dado de 6 lados
-6) Dado de 4 lados
+6) Dado de 3 lados
 ''')
         escolha_do_dado = int(input('Digite a sua escolha: '))
         if escolha_do_dado == 1:
@@ -214,8 +216,8 @@ Escolha o dado que você deseja girar:
             dado = random.randint(1, 6)
 
         elif escolha_do_dado == 6:
-            nome_dado = 'd4'
-            dado = random.randint(1, 4)
+            nome_dado = 'd3'
+            dado = random.randint(1, 3)
 
         print(f'Você girou um {nome_dado}. O resultado foi {dado}.')
 
